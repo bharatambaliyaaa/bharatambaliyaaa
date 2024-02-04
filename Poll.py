@@ -8,7 +8,7 @@ from telegram import Bot
 TOKEN = os.environ.get('TOKEN', 'your-telegram-token')
 CHANNEL_ID = '@currentadda'
 DELAY = 1800  # 30 minutes in seconds
-QUESTION_SHEET_URL = 'https://github.com/bharatambaliyaaa/bharatambaliyaaa/blob/09e36b305317723b2459751d6cf203f41455702a/questions.csv'
+QUESTION_SHEET_URL = 'https://raw.githubusercontent.com/bharatambaliyaaa/bharatambaliyaaa/main/questions.csv'
 MAX_EXPLANATION_LENGTH = 4096
 
 def download_questions():
