@@ -1,20 +1,14 @@
 import csv
-import requests
-import io
-import os
 import time
 from telegram import Bot
+import os
 
-TOKEN = os.environ.get('TOKEN', 'your-telegram-token')
-CHANNEL_ID = '@currentadda'
-DELAY = 1800  # 30 minutes in seconds
-QUESTION_SHEET_URL = 'https://raw.githubusercontent.com/bharatambaliyaaa/bharatambaliyaaa/main/questions.csv'
+
+TOKEN = os.getenv('TOKEN')
+CHANNEL_ID = os.getenv('CHANNEL_ID')
+DELAY = 10  # Increased delay between each question (in seconds)
+QUESTION_SHEET = 'questions.csv'
 MAX_EXPLANATION_LENGTH = 4096
-
-def download_questions():
-    response = requests.get(QUESTION_SHEET_URL)
-    response.raise_for_status()
-    return list(csv.reader(io.StringIO(response.text)))
 
 def send_question(question_data):
     question, *options, correct_option, explanation = question_data
@@ -73,12 +67,17 @@ def send_question_without_explanation(question, poll_options, correct_option_id)
     except Exception as e:
         print(f"Failed to send question without explanation: {str(e)}")
 
+def read_questions(sheet):
+    with open(sheet, 'r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header row
+        return [row for row in reader]
+
 def main():
-    while True:
-        all_questions = download_questions()
-        for question in all_questions:
-            send_question(question)
-            time.sleep(DELAY)
+    all_questions = read_questions(QUESTION_SHEET)
+    for question in all_questions:
+        send_question(question)
+        time.sleep(DELAY)
 
 if __name__ == '__main__':
     main()
